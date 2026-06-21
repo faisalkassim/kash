@@ -1,7 +1,11 @@
 // unix shell project
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
 
 #define MAX_TOKENS 64
 #define INPUT_LENGTH 100
@@ -12,6 +16,7 @@ int main()
 {
     char user_input[INPUT_LENGTH + 1];
     char *args[MAX_TOKENS];
+    pid_t pid;
 
     for (;;) //  prompts continuously
     {
@@ -23,6 +28,7 @@ int main()
 
         parse_input(user_input, args);
 
+        // handles empty input
         if (args[0] == NULL)
         {
             continue;
@@ -31,6 +37,26 @@ int main()
         if (strcmp("exit", args[0]) == 0)
         {
             break;
+        }
+
+        pid = fork();
+
+        if (pid == 0)
+        {
+            execvp(args[0],args);
+
+            // runs when execvp fails
+            perror("kash");
+            exit(1);
+        }
+        // executes in the parent process only
+        else if (pid > 0)
+        {
+            waitpid(pid, NULL, 0);
+        }
+        else
+        {
+            perror("kash");
         }
     }
     return 0;
@@ -48,7 +74,6 @@ void parse_input(char *input, char **args)
     while (ptr != NULL && i != MAX_TOKENS)
     {
         args[i] = ptr;
-        printf("%s\n", args[i]);
         ptr = strtok(NULL, " ");
         i++;
     }
