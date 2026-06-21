@@ -5,7 +5,7 @@ A Unix shell built in C from scratch.
 ## Features (in progress)
 - [x] Basic REPL loop
 - [x] Command parsing
-- [ ] Command execution (fork/exec)
+- [x] Command execution (fork/exec)
 - [ ] Built-in commands (cd, exit)
 - [ ] Pipes
 - [ ] Redirection
