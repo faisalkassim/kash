@@ -17,4 +17,4 @@ gcc main.c -o kash
 ```
 
 ## What I learned
-*(To be filled as the project progresses)*
+I learned how to tokenize string input using strtok, and how to use the fork() and execvp() system calls to create a child process and replace it with a new program respectively. I also learned how to use perror() to display descriptive error messages when system calls fail
