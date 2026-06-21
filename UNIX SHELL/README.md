@@ -6,7 +6,7 @@ A Unix shell built in C from scratch.
 - [x] Basic REPL loop
 - [x] Command parsing
 - [x] Command execution (fork/exec)
-- [ ] Built-in commands (cd, exit)
+- [x] Built-in commands (cd, exit)
 - [ ] Pipes
 - [ ] Redirection
 
