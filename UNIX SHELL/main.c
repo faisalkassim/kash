@@ -11,12 +11,14 @@
 #define INPUT_LENGTH 100
 
 void parse_input(char *input, char **args);
+int execute_builtin(char *str_1, char *str_2);
 
 int main()
 {
     char user_input[INPUT_LENGTH + 1];
     char *args[MAX_TOKENS];
     pid_t pid;
+    int is_builtin;
 
     for (;;) //  prompts continuously
     {
@@ -33,10 +35,15 @@ int main()
         {
             continue;
         }
-        // program ends when first token is "exit"
-        if (strcmp("exit", args[0]) == 0)
+        
+
+        
+        is_builtin = execute_builtin(args[0], args[1]);
+
+        // skips fork() if command is builtin
+        if (is_builtin)
         {
-            break;
+            continue;
         }
 
         pid = fork();
@@ -78,4 +85,35 @@ void parse_input(char *input, char **args)
         i++;
     }
     args[i] = NULL;
+}
+
+/* execute builtin
+custom function for performing cd and exit commands in parent process
+*/
+
+int execute_builtin(char *str_1, char *str_2)
+{
+    int status;
+
+    // checks if command is cd
+    if (strcmp("cd", str_1) == 0 )
+    {
+        // handles case where no path is specified
+        if (!(str_2 == NULL))
+        {
+            status = chdir(str_2);
+            // failed to find directory
+            if (status == -1)
+            {
+                perror("kash");
+            }
+        }
+        
+        return 1;
+    }
+    else if (strcmp("exit", str_1) == 0)
+    {
+        exit(0);
+    }
+    return 0;
 }
